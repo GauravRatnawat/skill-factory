@@ -10,16 +10,11 @@ What does each unit depend on, and is that dependency necessary?
 
 - Reaching through objects: `a.getB().getC().doThing()` — this unit knows its collaborators' internals. Chains through data structures or fluent APIs are navigation, not coupling.
 - One change, many files: a single conceptual change forces edits scattered across the codebase
-- One file, many reasons to change: a module that changes whenever *anything* changes
 - Pass-through: parameters or data flowing through a function untouched, coupling it to both caller and callee
 
 ## Process
 
-Trace the ripple in both directions:
-- Outward: if I changed this unit, what else would break?
-- Inward: what forces *this* unit to change? How many unrelated reasons does it have to change?
-
-If the ripple crosses many boundaries in either direction, the coupling is too tight.
+Trace the ripple outward: if I changed this unit, what else would break? If the answer crosses many boundaries, the coupling is too tight.
 
 ## Trade-off
 

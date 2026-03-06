@@ -9,7 +9,7 @@ What in this code is just noise that can be removed?
 ## Look For
 
 - Unused imports
-- Dead code, commented-out code
+- Dead code
 - Inconsistent indentation or spacing
 - Redundant wrappers (try/except that just re-raises)
 

@@ -13,13 +13,6 @@ What functions are trying to do multiple things? What sequences could be extract
 - Deep nesting (often signals multiple concerns)
 - Code blocks that could stand alone with a clear name
 
-## Early Returns
-
-Deep nesting often signals too much in one function. Early returns can:
-- Handle edge cases first, reducing indentation
-- Make the happy path obvious
-- Eliminate else branches entirely
-
 ## Process
 
 Look at each function. Could you split it? What would you name the pieces?
