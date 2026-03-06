@@ -3,6 +3,11 @@ name: refactoring-team
 description: Iterative code refactoring through progressive lenses via a worker-reviewer agent team.
 disable-model-invocation: true
 argument-hint: "[target-path]"
+hooks:
+  TeammateIdle:
+    - hooks:
+        - type: command
+          command: "${CLAUDE_SKILL_DIR}/references/guard-idle-worker.sh"
 ---
 
 STARTER_CHARACTER = 💎
@@ -29,7 +34,11 @@ Verify the target path exists and tests pass before proceeding.
 
 ## Launch the Team
 
-Create an agent team with two teammates: **worker** and **reviewer**.
+Generate a short random ID: `head -c 3 /dev/urandom | xxd -p | head -c 3`
+
+Use it to name the teammates:
+- Worker: `worker-ID` (e.g. `worker-a3f`)
+- Reviewer: `reviewer-ID` (e.g. `reviewer-a3f`)
 
 Read the spawn prompts:
 - Worker: [references/worker-prompt.md](references/worker-prompt.md)
@@ -40,6 +49,8 @@ Before spawning, replace these placeholders in both prompts:
 - `TEST_COMMAND` → actual test command
 - `LENSES_DIR` → `${CLAUDE_SKILL_DIR}/references/lenses`
 - `GUIDES_DIR` → `${CLAUDE_SKILL_DIR}/references/reviewer-guides`
+- `WORKER_NAME` → the worker's name (e.g. `worker-a3f`)
+- `REVIEWER_NAME` → the reviewer's name (e.g. `reviewer-a3f`)
 
 ## After Launch
 
