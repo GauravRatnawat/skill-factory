@@ -1,28 +1,26 @@
 # Lens: Error Handling
 
-Errors silently swallowed, error paths untested, or error types that do not communicate what went wrong.
+Error paths that nobody designed — failures that leak implementation details, go untested, or get silently swallowed.
 
 ## The Question
 
-When something goes wrong in this code, does the error path help or hide?
+When this code receives bad input or hits a failure, is the behavior designed or accidental?
 
 ## How to Spot
 
-- Exceptions caught and silently swallowed: `catch (e) {}`
-- Catch-all handlers that mask bugs by treating all errors the same
-- Exceptions used for normal control flow rather than exceptional conditions
-- Error messages that say "something went wrong" with no context
-- Functions that return null or undefined to signal failure silently
-- Error handling logic duplicated across many call sites
+- Implementation leaking through errors: a function raises the exception of the library it wraps — the error message speaks implementation language, not domain language
+- Undesigned error paths: a function can receive invalid input but there is no test and no explicit handling — the behavior is whatever the runtime happens to do
+- Untested boundaries: functions that take external input but no test exercises them with empty, zero, malformed, or extreme values
+- Silent swallowing: catch blocks that discard failures, catch-all handlers that mask bugs, functions returning null to signal failure without context
 
 ## Process
 
-For each error handler, ask: if this error fires in production, will someone be able to diagnose the problem? For each function that can fail, ask: does the caller know it can fail, and what to do about it?
+Feed the code inputs it wasn't designed for. Pick a function that takes external input and ask: what happens when the input is empty? Malformed? Zero where it shouldn't be? If you can't answer without reading the implementation, the error behavior is accidental — nobody designed it. Start with the most-called functions: they encounter the widest range of input and are the most costly to leave undesigned.
 
 ## Trade-off
 
-Not every function needs elaborate error handling. Internal code that controls its inputs can trust them. The focus is on boundaries — where external input, network calls, file I/O, or user actions can produce failures that need clear handling.
+Validate at the boundaries, trust internally. Code behind a validated boundary can assume its inputs are good — adding defensive checks there obscures the real logic. When internal code hits an impossible state, crashing immediately and visibly is more robust than handling gracefully. The goal is designed error paths at the edges, not try/catch everywhere.
 
 ## Go Deeper
 
-What other error paths are silent or misleading? Where is error handling duplicated? Where do callers not know a function can fail?
+Where do implementation exceptions surface as domain errors? Where does a function fail not because its error handling is wrong but because it doesn't support a valid input type? Where is error behavior purely accidental — the implementation happens to throw, but nobody decided it should?
