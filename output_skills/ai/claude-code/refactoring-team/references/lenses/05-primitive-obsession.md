@@ -1,25 +1,26 @@
 # Lens: Primitive Obsession
 
-Domain concepts often hide as primitives. A tuple isn't just a tuple — it represents something. A dict isn't just a dict — it has a name you'd use when explaining.
+Domain concepts hiding as raw data — strings, tuples, and dicts carrying meaning the type system doesn't capture.
 
 ## The Question
 
-What concepts in this code are hiding as raw data structures?
+What domain concepts in this code exist only as primitives?
 
 ## How to Spot
 
-Ask: if I had to explain this to someone, would I use a name that doesn't exist in the code?
+- Values that travel together: the same two or three primitives passed as a group between functions, unpacked the same way each time
+- Strings carrying structure: values split, joined, parsed, or validated in consistent patterns — a format hiding inside a string
+- Scattered parsing: the same guard clause, validation, or string-splitting logic repeated across multiple locations
+- Type signatures that lie: a function accepts `str` or `dict` but only works correctly with a specific format or set of keys
 
-Look for:
-- Tuples unpacked the same way in multiple places
-- Dicts with known keys accessed repeatedly
-- Strings split/joined in consistent patterns
-- Data passed between functions that "means something"
+## Process
 
-## First Pass
+Describe the code to someone in domain language. Every noun you use that doesn't exist as a type in the code is a missing concept. The gap between how you talk about the code and what the type system captures is where the primitives are hiding.
 
-Look broadly. What tuples, dicts, or strings carry meaning beyond their type?
+## Trade-off
+
+Not every primitive needs a type. Act when parsing or validation is duplicated, when values always travel together, or when bugs come from confusing one value for another. Leave primitives alone when the concept is purely local and has no rules or behavior worth naming.
 
 ## Go Deeper
 
-What else in this code fits this lens? What other primitives are carrying hidden meaning?
+Where are intermediate representations missing — raw strings flowing end-to-end because nothing ever parses them into structured form? What values always travel together but get passed as separate arguments? Which functions silently assume a string has a specific format without the type making that guarantee visible?
